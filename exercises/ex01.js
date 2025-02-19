@@ -7,7 +7,30 @@
 const Queue = require('../lib/Queue')
 
 function processApplicants(queue) {
-  // your code here
+  const tempQueue = new Queue(); // Cola temporal para los candidatos que cumplen requisitos
+
+  while (!queue.isEmpty()) {
+    const applicant = queue.dequeue(); // Extraemos el primer candidato de la cola
+    let hasReact = false; // Variable para verificar si el candidato tiene React en su techStack
+
+    // Usamos un bucle for para buscar "React" en el techStack
+    for (let i = 0; i < applicant.techStack.length; i++) {
+      if (applicant.techStack[i] === 'React') {
+        hasReact = true;
+        break; // Si encontramos React, salimos del bucle
+      }
+    }
+
+    if (applicant.yearsExperience >= 2 && hasReact) { // Verificamos experiencia y React
+      tempQueue.enqueue(applicant); // Lo agregamos a la cola temporal
+    }
+  }
+
+  // Pasamos los candidatos seleccionados de nuevo a la cola original
+  while (!tempQueue.isEmpty()) {
+    queue.enqueue(tempQueue.dequeue());
+  }
+
 }
 
 const applicants = new Queue()

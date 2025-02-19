@@ -6,8 +6,29 @@
 const Queue = require('../lib/Queue')
 
 function groceryCheckout(queue) {
-  // your code here
+  const tempQueue = new Queue(); // Cola temporal para clientes con compras mayores a $50
+
+  while (!queue.isEmpty()) {
+    const customer = queue.dequeue(); // Extraer al primer cliente
+    let totalCost = 0; // Inicializamos el costo total en 0
+
+    // Usamos un bucle for para calcular el total del carrito
+    for (let i = 0; i < customer.cart.length; i++) {
+      totalCost += customer.cart[i].price;
+    }
+
+    if (totalCost > 50) { // Si el total es mayor a $50, el cliente sigue en la cola
+      tempQueue.enqueue(customer);
+    }
+  }
+
+  // Pasar los clientes filtrados de vuelta a la cola original
+  while (!tempQueue.isEmpty()) {
+    queue.enqueue(tempQueue.dequeue());
+  }
+
 }
+
 
 const customers = new Queue();
 customers.enqueue({ name: "Alice", cart: [{ item: "Milk", price: 10 }, { item: "Bread", price: 5 }] });

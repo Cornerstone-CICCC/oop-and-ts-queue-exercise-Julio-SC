@@ -7,7 +7,27 @@
 const Queue = require('../lib/Queue')
 
 function processReturns(queue) {
+  const tempQueue = new Queue();
   // your code here
+  while (!queue.isEmpty()) {
+    const person = queue.dequeue(); // Extraer la primera persona
+    let totalFine = 0; // Inicializamos la multa en 0
+
+    // Recorremos todos los libros con un bucle for
+    for (let i = 0; i < person.books.length; i++) {
+      totalFine += person.books[i].daysLate * 2; // Multa de $2 por cada día tarde
+    }
+
+    if (totalFine > 0) { // Filtrar personas con multa
+      tempQueue.enqueue(person);
+    }
+  }
+
+  // Pasar las personas con multa de vuelta a la cola original
+  while (!tempQueue.isEmpty()) {
+    queue.enqueue(tempQueue.dequeue());
+  }  
+
 }
 
 const returns = new Queue();
